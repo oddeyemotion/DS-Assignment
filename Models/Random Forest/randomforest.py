@@ -14,17 +14,6 @@ from matplotlib.pyplot import figure
 import csv
 import calendar
 
-glo_bal = pd.read_csv('Global.csv')
-glo_bal2 = pd.read_csv('Global_wo_may.csv')
-glo_bal2['Active'] = glo_bal2['Confirmed'] - \
-    glo_bal2['Deaths'] - glo_bal2['Recovered']
-globalactive = pd.read_csv('GlobalActive.csv')
-
-
-
-A = globalactive
-size = int(len(A)*0.8)
-train, test = A[0:size], A[size:len(A)]
 
 regressor = RandomForestRegressor(n_estimators=100)
 
@@ -100,7 +89,7 @@ values = series.values
 # transform the time series data into supervised learning
 data = series_to_supervised(values, n_in=6)
 # evaluate
-mae, y, yhat = walk_forward_validation(data, 60)
+mae, y, yhat = walk_forward_validation(data, 120)
 print('R2: %.3f' % mae)
 # plot expected vs predicted
 plt.plot(y, label='Expected')
