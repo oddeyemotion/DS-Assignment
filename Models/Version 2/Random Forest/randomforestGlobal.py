@@ -1,4 +1,3 @@
-# finalize model and make a prediction for monthly births with random forest
 from numpy import log, asarray, square
 from statsmodels.tsa.stattools import adfuller
 import numpy as np
