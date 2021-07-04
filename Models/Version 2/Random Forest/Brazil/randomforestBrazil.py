@@ -15,28 +15,28 @@ from matplotlib.pyplot import figure, title
 
 # transform a time series dataset into a supervised learning dataset
 def series_to_supervised(data, n_in=1, n_out=1, dropnan=True):
-    n_vars = 1 if type(data) is list else data.shape[1]
-    df = DataFrame(data)
-    cols = list()
-    # input sequence (t-n, ... t-1)
-    for i in range(n_in, 0, -1):
-        cols.append(df.shift(i))
-    # forecast sequence (t, t+1, ... t+n)
-    for i in range(0, n_out):
-        cols.append(df.shift(-i))
-    # put it all together
-    agg = pd.concat(cols, axis=1)
-    # drop rows with NaN values
-    if dropnan:
-        agg.dropna(inplace=True)
-    return agg.values
+	n_vars = 1 if type(data) is list else data.shape[1]
+	df = DataFrame(data)
+	cols = list()
+	# input sequence (t-n, ... t-1)
+	for i in range(n_in, 0, -1):
+		cols.append(df.shift(i))
+	# forecast sequence (t, t+1, ... t+n)
+	for i in range(0, n_out):
+		cols.append(df.shift(-i))
+	# put it all together
+	agg = pd.concat(cols, axis=1)
+	# drop rows with NaN values
+	if dropnan:
+		agg.dropna(inplace=True)
+	return agg.values
 
 
 # load the dataset
-globalactive = pd.read_csv('IndiaActive.csv')
+globalactive = pd.read_csv('BrazilActive.csv')
 globalactive = globalactive.drop(labels='Date', axis=1)
 
-series = pd.read_csv('IndiaActive copy.csv', header=0, index_col=0)
+series = pd.read_csv('BrazilActive copy.csv', header=0, index_col=0)
 values = series.values
 # transform the time series data into supervised learning
 train = series_to_supervised(values, n_in=6)
@@ -71,7 +71,7 @@ print('RMSE: %.3f' % rmse)
 
 # now applying on the whole dataset
 
-series2 = pd.read_csv('IndiaActive.csv', header=0, index_col=0)
+series2 = pd.read_csv('BrazilActive.csv', header=0, index_col=0)
 values2 = series2.values
 # transform the time series data into supervised learning
 train2 = series_to_supervised(values2, n_in=6)
