@@ -86,6 +86,7 @@ for i in range(14):
     row2 = values2[-6:].flatten()
     # make a one-step prediction
     yhat2 = model2.predict(asarray([row2]))
+	# add prediction to dataframe
     values2 = np.vstack((values2, yhat2))
 
 predic2 = pd.DataFrame(values2, columns=['Active'], dtype=int)
