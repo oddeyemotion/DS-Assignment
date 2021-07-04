@@ -1,4 +1,5 @@
-from numpy import log, asarray
+# finalize model and make a prediction for monthly births with random forest
+from numpy import log, asarray, square
 from statsmodels.tsa.stattools import adfuller
 import numpy as np
 import pandas as pd
@@ -10,9 +11,8 @@ import matplotlib.pyplot as plt
 import plotly.express as px  # install plotly
 from datetime import datetime, timedelta
 from sklearn.metrics import r2_score, mean_squared_error
-from matplotlib.pyplot import figure
+from matplotlib.pyplot import figure, title
 
-regressor = RandomForestRegressor(n_estimators=1000)
 
 
 # transform a time series dataset into a supervised learning dataset
@@ -33,56 +33,65 @@ def series_to_supervised(data, n_in=1, n_out=1, dropnan=True):
 		agg.dropna(inplace=True)
 	return agg.values
 
-# split a univariate dataset into train/test sets
-
-
-def train_test_split(data, n_test):
-	return data[:-n_test, :], data[-n_test:, :]
-
-# fit an random forest model and make a one step prediction
-
-
-def random_forest_forecast(train, testX):
-	# transform list into array
-	train = asarray(train)
-	# split into input and output columns
-	trainX, trainy = train[:, :-1], train[:, -1]
-	# fit model
-	model = RandomForestRegressor(n_estimators=3000)
-	model.fit(trainX, trainy)
-	# make a one-step prediction
-	yhat = model.predict([testX])
-	return yhat[0]
-
-# walk-forward validation for univariate data
-
-
-def walk_forward_validation(data, n_test):
-	predictions = list()
-	train, test = train_test_split(data, n_test)
-	history = [x for x in train]
-	for i in range(len(test)):
-		testX, testy = test[i, :-1], test[i, -1]
-		yhat = random_forest_forecast(history, testX)
-		predictions.append(yhat)
-		history.append(test[i])
-		print('>expected=%.1f, predicted=%.1f' % (testy, yhat))
-	r2 = r2_score(test[:, -1], predictions)
-	rmse = mean_squared_error(test[:, -1], predictions, squared=False)
-	return r2, rmse, test[:, -1], predictions
-
 
 # load the dataset
-series = pd.read_csv('GlobalActive.csv', header=0, index_col=0)
+globalactive = pd.read_csv('GlobalActive.csv')
+globalactive = globalactive.drop(labels='Date', axis=1)
+
+series = pd.read_csv('GlobalActive copy.csv', header=0, index_col=0)
 values = series.values
 # transform the time series data into supervised learning
-data = series_to_supervised(values, n_in=6)
-# evaluate
-r2, rmse, y, yhat = walk_forward_validation(data, 14)
-print('R2: %.3f' % r2)
-print('RMSE: %.3f' % rmse)
-# plot expected vs predicted
-plt.plot(y, label='Expected')
-plt.plot(yhat, label='Predicted')
+train = series_to_supervised(values, n_in=6)
+# split into input and output columns
+trainX, trainy = train[:, :-1], train[:, -1]
+# fit model
+model = RandomForestRegressor(n_estimators=1000)
+model.fit(trainX, trainy)
+# construct an input for a new prediction of the next 14 days
+for i in range(14):
+    row = values[-6:].flatten()
+    # make a one-step prediction
+    yhat = model.predict(asarray([row]))
+    values = np.vstack((values,yhat))
+
+predic = pd.DataFrame(values, columns=['Active'], dtype=int)
+
+plt.figure(figsize=(10,5))
+plt.title('Prediction for Active cases on the last 14 days in the dataset')
+plt.plot(globalactive[-14:], label= 'Expected')
+plt.plot(predic[-14:], label = 'Predicted')
 plt.legend()
+plt.show()
+
+
+r2 = r2_score(globalactive[-14:],predic[-14:])
+print('R2: %.3f' %r2)
+
+rmse = mean_squared_error(globalactive[-14:],predic[-14:],squared=False)
+print('RMSE: %.3f' %rmse)
+
+
+# now applying on the whole dataset
+
+series2 = pd.read_csv('GlobalActive.csv', header=0, index_col=0)
+values2 = series2.values
+# transform the time series data into supervised learning
+train2 = series_to_supervised(values2, n_in=6)
+# split into input and output columns
+trainX2, trainy2 = train2[:, :-1], train2[:, -1]
+# fit model
+model2 = RandomForestRegressor(n_estimators=1000)
+model2.fit(trainX2, trainy2)
+# construct an input for a new prediction of the next 14 days
+for i in range(14):
+    row2 = values2[-6:].flatten()
+    # make a one-step prediction
+    yhat2 = model2.predict(asarray([row2]))
+    values2 = np.vstack((values2, yhat2))
+
+predic2 = pd.DataFrame(values2, columns=['Active'], dtype=int)
+
+plt.figure(figsize=(10,5))
+plt.plot(predic2[-15:])
+plt.title('Prediction for Active cases in the next 14 days from 31-5-2021')
 plt.show()
