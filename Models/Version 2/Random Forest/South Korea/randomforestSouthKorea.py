@@ -93,3 +93,8 @@ plt.figure(figsize=(10, 5))
 plt.plot(predic2[-15:])
 plt.title('Prediction for Active cases in the next 14 days from 31-5-2021')
 plt.show()
+
+
+
+# Part of code adapted from:
+# [https://machinelearningmastery.com/random-forest-for-time-series-forecasting/] - transform a time series dataset into a supervised learning dataset
