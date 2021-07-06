@@ -92,7 +92,7 @@ for i in range(14):
 predic2 = pd.DataFrame(values2, columns=['Active'], dtype=int)
 
 plt.figure(figsize=(10,5))
-plt.plot(predic2[-15:])
+plt.plot(predic2[-14:])
 plt.title('Prediction for Active cases in the next 14 days from 31-5-2021')
 plt.show()
 
