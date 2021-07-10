@@ -14,19 +14,19 @@ def parser(x):
 	return datetime.strptime('202'+x, '%Y-%m-%d')
 
 
-gl0bal = read_csv('https://raw.githubusercontent.com/ll-cooool-j/DS-Assignment/main/Visuals/Basic%20visuals/Datasets%20of%20each%20country%20and%20Global/Global%20(SPSS).csv',
+gl0bal = read_csv('https://raw.githubusercontent.com/ll-cooool-j/DS-Assignment/main/Datasets/Datasets%20of%20each%20country%20and%20Global%20(main%20dataset%20-%208%20attributes)/Global%20(SPSS).csv',
                   header=0, parse_dates=[0], index_col=0, squeeze=True, date_parser=parser)
-india = read_csv('https://raw.githubusercontent.com/ll-cooool-j/DS-Assignment/main/Visuals/Basic%20visuals/Datasets%20of%20each%20country%20and%20Global/Highest%20Number%20of%20Infections%20Country%20~%20India%20(SPSS).csv',
+india = read_csv('https://raw.githubusercontent.com/ll-cooool-j/DS-Assignment/main/Datasets/Datasets%20of%20each%20country%20and%20Global%20(main%20dataset%20-%208%20attributes)/Highest%20Number%20of%20Infections%20Country%20~%20India%20(SPSS).csv',
                  header=0, parse_dates=[0], index_col=0, squeeze=True, date_parser=parser)
-us = read_csv('https://raw.githubusercontent.com/ll-cooool-j/DS-Assignment/main/Visuals/Basic%20visuals/Datasets%20of%20each%20country%20and%20Global/Highest%20Number%20of%20Infections%20Country%20~%20United%20States%20(SPSS).csv',
+us = read_csv('https://raw.githubusercontent.com/ll-cooool-j/DS-Assignment/main/Datasets/Datasets%20of%20each%20country%20and%20Global%20(main%20dataset%20-%208%20attributes)/Highest%20Number%20of%20Infections%20Country%20~%20United%20States%20(SPSS).csv',
               header=0, parse_dates=[0], index_col=0, squeeze=True, date_parser=parser)
-brazil = read_csv('https://raw.githubusercontent.com/ll-cooool-j/DS-Assignment/main/Visuals/Basic%20visuals/Datasets%20of%20each%20country%20and%20Global/Highest%20Number%20of%20Infections%20Country%20~%20Brazil%20(SPSS).csv',
+brazil = read_csv('https://raw.githubusercontent.com/ll-cooool-j/DS-Assignment/main/Datasets/Datasets%20of%20each%20country%20and%20Global%20(main%20dataset%20-%208%20attributes)/Highest%20Number%20of%20Infections%20Country%20~%20Brazil%20(SPSS).csv',
                   header=0, parse_dates=[0], index_col=0, squeeze=True, date_parser=parser)
-japan = read_csv('https://raw.githubusercontent.com/ll-cooool-j/DS-Assignment/main/Visuals/Basic%20visuals/Datasets%20of%20each%20country%20and%20Global/Asian%20Country%20~%20Japan%20(SPSS).csv',
+japan = read_csv('https://raw.githubusercontent.com/ll-cooool-j/DS-Assignment/main/Datasets/Datasets%20of%20each%20country%20and%20Global%20(main%20dataset%20-%208%20attributes)/Asian%20Country%20~%20Japan%20(SPSS).csv',
                  header=0, parse_dates=[0], index_col=0, squeeze=True, date_parser=parser)
-korea = read_csv('https://raw.githubusercontent.com/ll-cooool-j/DS-Assignment/main/Visuals/Basic%20visuals/Datasets%20of%20each%20country%20and%20Global/Asian%20Country%20~%20South%20Korea%20(SPSS).csv',
+korea = read_csv('https://raw.githubusercontent.com/ll-cooool-j/DS-Assignment/main/Datasets/Datasets%20of%20each%20country%20and%20Global%20(main%20dataset%20-%208%20attributes)/Asian%20Country%20~%20South%20Korea%20(SPSS).csv',
                  header=0, parse_dates=[0], index_col=0, squeeze=True, date_parser=parser)
-vn = read_csv('https://raw.githubusercontent.com/ll-cooool-j/DS-Assignment/main/Visuals/Basic%20visuals/Datasets%20of%20each%20country%20and%20Global/Asian%20Country%20~%20Vietnam%20(SPSS).csv',
+vn = read_csv('https://raw.githubusercontent.com/ll-cooool-j/DS-Assignment/main/Datasets/Datasets%20of%20each%20country%20and%20Global%20(main%20dataset%20-%208%20attributes)/Asian%20Country%20~%20Vietnam%20(SPSS).csv',
               header=0, parse_dates=[0], index_col=0, squeeze=True, date_parser=parser)
 
 fig, ax = plt.subplots()
@@ -38,5 +38,5 @@ ax.plot(japan['Mortality_rate'], label="Japan")
 ax.plot(korea['Mortality_rate'], label="Korea")
 ax.plot(vn['Mortality_rate'], label="Vietnam")
 ax.legend()
-ax.set_title('Confirmed, Death and Recovered cases of Global')
+ax.set_title('Mortality rate of all countries')
 plt.show()
