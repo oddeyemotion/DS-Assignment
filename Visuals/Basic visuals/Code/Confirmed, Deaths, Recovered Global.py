@@ -14,7 +14,7 @@ def parser(x):
     return datetime.strptime('202'+x, '%Y-%m-%d')
 
 
-gl0bal = read_csv('https://raw.githubusercontent.com/ll-cooool-j/DS-Assignment/main/Visuals/Basic%20visuals/Datasets%20of%20each%20country%20and%20Global/Global%20(SPSS).csv',
+gl0bal = read_csv('https://raw.githubusercontent.com/ll-cooool-j/DS-Assignment/main/Datasets/Datasets%20of%20each%20country%20and%20Global%20(main%20dataset%20-%208%20attributes)/Global%20(SPSS).csv',
                   header=0, parse_dates=[0], index_col=0, squeeze=True, date_parser=parser)
 
 fig, ax = plt.subplots()
