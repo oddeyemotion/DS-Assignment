@@ -23,6 +23,7 @@ korea = read_csv('https://raw.githubusercontent.com/ll-cooool-j/DS-Assignment/ma
 vn = read_csv('https://raw.githubusercontent.com/ll-cooool-j/DS-Assignment/main/Datasets/Datasets%20of%20each%20country%20and%20Global%20(main%20dataset%20-%208%20attributes)/Asian%20Country%20~%20Vietnam%20(SPSS).csv',header=0, parse_dates=[0], index_col=0, squeeze=True, date_parser=parser)
 
 fig, ax = plt.subplots(figsize=(12,8))
+ax.set_yscale("log")
 ax.plot(gl0bal['Mortality_rate'], label="Global")
 ax.plot(india['Mortality_rate'], label="India")
 ax.plot(us['Mortality_rate'], label="US")
