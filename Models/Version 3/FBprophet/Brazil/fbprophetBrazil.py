@@ -20,28 +20,25 @@ def parser(x):
     return datetime.strptime('202'+x, '%Y-%m-%d')
 
 
-# Read in the data:
+# Read in the data. We will use the series dataframe to 
+# train our model and the evaluate dataframe to score our prediction
 series = pd.read_csv(
     'https://raw.githubusercontent.com/ll-cooool-j/DS-Assignment/main/Datasets/Datasets%20for%20daily%20data%20plots/Brazil%20(Date%20%2B%20New%20Cases%20%2B%20Smoothed%20New%20Cases).csv', header=0, parse_dates=[0], squeeze=True, date_parser=parser)
 
-# Drop the new cases smoothed columns because we wont be using it:
+evaluate = pd.read_csv('https://raw.githubusercontent.com/ll-cooool-j/DS-Assignment/main/Datasets/Datasets%20for%20RFR%20(Only%20Date%20%2B%20New%20cases)/Brazil%20-%2014%20days%20of%20June%20(Only%20Date%20%2B%20New%20cases).csv',
+                   header=0, parse_dates=[0], squeeze=True, date_parser=parser)
+# Drop the new_cases_smoothed columns because we wont be using it:
 series = series.drop(columns=['new_cases_smoothed'])
 
 # Because we will be using Box-cox transformation later on which 
 # does not accept 0 values, we will add 1 to those:
-for i in range(0, 320):
+for i in range(0, 335):
     if series['new_cases'][i] == 0:
         series['new_cases'][i] = series['new_cases'][i] + 1
 
-# Create a dataframe with the full data up until 31-5-2021 to 
-# evaluate as well as for the final prediction later:
-evaluate = pd.DataFrame(series)
-
-# Drop the last 14 rows because we will use those for evaluation:
-series = series.drop(series.index[321:335])
 
 # Because fbprophet require a 'ds' and a 'y' column which contains the 
-# date and the value respectively, we will create those by copying our Date column and New cases column
+# date and the value respectively, we will create those by copying our Date column and new_cases column
 series['ds'] = series['Date']
 series['y'] = series['new_cases']
 series.set_index('Date', inplace=True)
@@ -53,12 +50,17 @@ plt.show()
 # Creating the fbprophet model object:
 pp = Prophet()
 
+# Add the built-in holidays of the country to count in holiday effects, 
+# which we think might affect the Infection of Covid-19
+pp.add_country_holidays(country_name='BR')
+
 # Using Box-cox transformation to clean our dataframe to make it less noisy:
 series['y'], lam = boxcox(series['new_cases'])
 
 # Plot to see the difference after using Box-cox:
 plt.plot(series['ds'], series['y'])
 plt.show()
+
 
 # Fit the model on our transformed dataframe:
 pp.fit(series)
@@ -72,39 +74,14 @@ forecast = pp.predict(future)
 forecast[['yhat', 'yhat_upper', 'yhat_lower']] = forecast[['yhat', 'yhat_upper', 'yhat_lower']].apply(lambda x: inv_boxcox(x, lam))
 
 # Plotting our prediction along with the expected data:
-plt.plot(evaluate['Date'][-14:], evaluate['new_cases'][-14:], label='Expected')
+plt.figure(figsize=(20,12))
+plt.plot(evaluate['Date'], evaluate['new_cases'], label='Expected')
 plt.plot(forecast['ds'][-14:],forecast['yhat'][-14:], label='Predicted')
 plt.legend()
-plt.title('Prediction for the last 14 days until 31-5-2021')
+plt.title('Prediction for the following 14 days after 31-5-2021')
 plt.show()
 # Evaluate the result:
 mae = mean_absolute_error(forecast['yhat'][-14:], evaluate['new_cases'][-14:])
 r2 = r2_score(forecast['yhat'][-14:], evaluate['new_cases'][-14:])
 print('R2 score: %.3f' % r2)
 print('MAE score: %.3f' % mae)
-
-
-# Now we apply the process again to see the prediction for
-# 14 days after 31-5-2021, our main aim:
-evaluate['ds'] = evaluate['Date']
-evaluate['y'] = evaluate['new_cases']
-evaluate.set_index('Date', inplace=True)
-
-
-
-pp2 = Prophet()
-evaluate['y'], lam2 = boxcox(evaluate['new_cases'])
-pp2.fit(evaluate)
-
-future2 = pp2.make_future_dataframe(periods=14)
-
-
-forecast2 = pp2.predict(future2)
-
-
-forecast2[['yhat', 'yhat_upper', 'yhat_lower']] = forecast2[[
-    'yhat', 'yhat_upper', 'yhat_lower']].apply(lambda x: inv_boxcox(x, lam2))
-
-plt.plot(forecast2['ds'][-14:],forecast2['yhat'][-14:])
-plt.title('Prediction for the next 14 days after 31-5-2021')
-plt.show()

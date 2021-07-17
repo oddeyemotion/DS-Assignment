@@ -20,9 +20,9 @@ from prophet import Prophet
 # evaluate purpose (it contains data up to 31-5-2021), while the series variable is for 
 # making prediction to evaluate (it only contains data up to 17-5-2021):
 globalactive = pd.read_csv(
-    'GlobalActive.csv')
+    'https://raw.githubusercontent.com/ll-cooool-j/DS-Assignment/main/Models/Version%203/FBprophet/Global/GlobalActive.csv')
 series = pd.read_csv(
-    'GlobalActive copy.csv')
+    'https://raw.githubusercontent.com/ll-cooool-j/DS-Assignment/main/Models/Version%203/FBprophet/Global/GlobalActive%20copy.csv')
 
 # Converting the ds into datetime type just to make sure, and get rid of the ds 
 # column in globalactive because we will only be using it to evaluate:
@@ -63,7 +63,7 @@ print('MAE score: %.3f' % mae)
 # Now we apply the process again to see the prediction for 
 # 14 days after 31-5-2021, our main aim:
 globalactive2 = pd.read_csv(
-    'GlobalActive.csv')
+    'https://raw.githubusercontent.com/ll-cooool-j/DS-Assignment/main/Models/Version%203/FBprophet/Global/GlobalActive.csv')
 
 pp2 = Prophet(daily_seasonality=True, yearly_seasonality=True)
 pp2.fit(globalactive2)

@@ -24,9 +24,9 @@ def parser(x):
 # Read in the data. We will use the series dataframe to
 # train our model and the evaluate dataframe to score our prediction
 series = pd.read_csv(
-    'https://raw.githubusercontent.com/ll-cooool-j/DS-Assignment/main/Datasets/Datasets%20for%20daily%20data%20plots/South%20Korea%20(Date%20%2B%20New%20Cases%20%2B%20Smoothed%20New%20Cases).csv', header=0, parse_dates=[0], squeeze=True, date_parser=parser)
+    'https://raw.githubusercontent.com/ll-cooool-j/DS-Assignment/main/Datasets/Datasets%20for%20daily%20data%20plots/United%20States%20(Date%20%2B%20New%20Cases%20%2B%20Smoothed%20New%20Cases).csv', header=0, parse_dates=[0], squeeze=True, date_parser=parser)
 
-evaluate = pd.read_csv('https://raw.githubusercontent.com/ll-cooool-j/DS-Assignment/main/Datasets/Datasets%20for%20RFR%20(Only%20Date%20%2B%20New%20cases)/South%20Korea%20-%2014%20days%20of%20June%20(Only%20Date%20%2B%20New%20cases).csv',
+evaluate = pd.read_csv('https://raw.githubusercontent.com/ll-cooool-j/DS-Assignment/main/Datasets/Datasets%20for%20RFR%20(Only%20Date%20%2B%20New%20cases)/United%20States%20-%2014%20days%20of%20June%20(Only%20Date%20%2B%20New%20cases).csv',
                        header=0, parse_dates=[0], squeeze=True, date_parser=parser)
 # Drop the new_cases_smoothed columns because we wont be using it:
 series = series.drop(columns=['new_cases_smoothed'])
@@ -48,14 +48,13 @@ series.set_index('Date', inplace=True)
 plt.plot(series['ds'], series['y'])
 plt.show()
 
-# Creating the fbprophet model object. After trying, we found out that if we
-# added the yearly_seasonality, our prediction is more closer to the real data:
-pp = Prophet(yearly_seasonality=True)
+# Creating the fbprophet model object:
+pp = Prophet()
 
 # Add the built-in holidays of the country to count in holiday effects,
 # which we think will affect the Infection of Covid-19, so by adding
 # the holiday effects, we might get a better prediction:
-pp.add_country_holidays(country_name='KR')
+pp.add_country_holidays(country_name='US')
 
 # Using Box-cox transformation to clean our dataframe to make it less noisy:
 series['y'], lam = boxcox(series['new_cases'])
