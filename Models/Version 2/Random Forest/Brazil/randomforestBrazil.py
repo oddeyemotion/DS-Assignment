@@ -38,7 +38,7 @@ def series_to_supervised(data, n_in=1, n_out=1, dropnan=True):
 globalactive = pd.read_csv('BrazilActive.csv')
 globalactive = globalactive.drop(labels='Date', axis=1)
 
-series = pd.read_csv('https://raw.githubusercontent.com/ll-cooool-j/DS-Assignment/main/Datasets/Datasets%20for%20daily%20data%20plots/Brazil%20(Date%20%2B%20New%20Cases%20%2B%20Smoothed%20New%20Cases).csv', header=0, index_col=0)
+series = pd.read_csv('BrazilActive copy.csv', header=0, index_col=0)
 values = series.values
 # The globalactive variable is only for the purpose of comparing the prediction purpose
 # (it has the last 14 days of the dataset, until 31-5-2021) and the actual dataset used
